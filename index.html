@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elliot Malsam</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --border: #222222;
+    --green: #00ff87;
+    --green-dim: #00ff8733;
+    --amber: #ffb347;
+    --amber-dim: #ffb34720;
+    --text: #e8e8e8;
+    --muted: #666;
+    --muted2: #444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,255,135,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,135,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+  }
+
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--green); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 56px;
+  }
+
+  .hero-inner {
+    padding: 6rem 0 4rem;
+  }
+
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.35s;
+  }
+
+  .hero h1 .accent {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--green);
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.5s;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.65s;
+  }
+
+  .stat {
+    border-left: 2px solid var(--green);
+    padding-left: 1rem;
+  }
+
+  .stat-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--green);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: #000;
+    border-color: var(--green);
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--green);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  /* SECTION */
+  section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .project-card {
+    background: var(--bg);
+    padding: 2rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--green);
+    transition: height 0.3s ease;
+  }
+
+  .project-card:hover { background: var(--bg2); }
+  .project-card:hover::before { height: 100%; }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+  }
+
+  .project-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .project-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge-green {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid var(--green);
+  }
+
+  .badge-amber {
+    background: var(--amber-dim);
+    color: var(--amber);
+    border: 1px solid var(--amber);
+  }
+
+  .badge-muted {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--muted2);
+  }
+
+  .project-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-metrics {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .metric-key {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted2);
+    background: var(--bg3);
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .skill-block {
+    background: var(--bg);
+    padding: 1.5rem;
+  }
+
+  .skill-category {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .about-block {
+    background: var(--bg);
+    padding: 2rem;
+  }
+
+  .about-block h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .about-block p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .about-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about-list li {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .about-list li::before {
+    content: '→';
+    color: var(--green);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  /* CONTACT */
+  .contact-row {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .contact-block {
+    background: var(--bg);
+    padding: 2rem;
+    flex: 1;
+    transition: background 0.2s;
+  }
+
+  .contact-block:hover { background: var(--bg2); }
+
+  .contact-block a {
+    text-decoration: none;
+    display: block;
+  }
+
+  .contact-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .contact-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--green);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+  }
+
+  footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted2);
+    letter-spacing: 0.08em;
+  }
+
+  /* TERMINAL BLINK */
+  .blink {
+    animation: blink 1.2s step-end infinite;
+    color: var(--green);
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .contact-row { flex-direction: column; }
+    .project-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-logo">EM_PORTFOLIO<span class="blink">█</span></div>
+    <ul class="nav-links">
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#about">about</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-tag">based in colorado // open to opportunities</div>
+      <h1>Elliot<br><span class="accent">Malsam</span></h1>
+      <p class="hero-desc">
+        I build data-driven systems at the intersection of finance, sports analytics, and automation. Python, APIs, and algorithmic logic — turning edge into executable code.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">+46%</span>
+          <span class="stat-label">Backtest return (16mo)</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">57.9%</span>
+          <span class="stat-label">Win rate</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">3.27%</span>
+          <span class="stat-label">Max drawdown</span>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">VIEW PROJECTS</a>
+        <a href="#contact" class="btn btn-ghost">GET IN TOUCH</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label reveal">01 // PROJECTS</div>
+    <div class="projects-grid reveal">
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">MAMS-v4 // Multi-Agent Master Swing</div>
+          <span class="project-badge badge-green">LIVE PAPER</span>
+        </div>
+        <p class="project-desc">
+          Pine Script v6 swing trading system for ETH/USD on the 1H timeframe. Features a multi-agent consensus engine (13+ agents), regime detection, dynamic position sizing, volatility gating via ADX, and adaptive trailing stops. Built to target ~5% monthly returns with controlled drawdown.
+        </p>
+        <div class="project-metrics">
+          <div class="metric">
+            <span class="metric-val">+46.43%</span>
+            <span class="metric-key">16-month return</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">1.641</span>
+            <span class="metric-key">Profit factor</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">57.94%</span>
+            <span class="metric-key">Win rate</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">3.27%</span>
+            <span class="metric-key">Max drawdown</span>
+          </div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Pine Script v6</span>
+          <span class="tag">TradingView</span>
+          <span class="tag">ETH/USD</span>
+          <span class="tag">Regime Detection</span>
+          <span class="tag">Algo Trading</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">MLB Prop Betting Model</div>
+          <span class="project-badge badge-amber">IN SEASON</span>
+        </div>
+        <p class="project-desc">
+          Multi-source Python pipeline for MLB player prop analysis. Integrates MLB Stats API, Baseball Savant Statcast data, OpenWeatherMap for ballpark conditions, and The Odds API for live lines. Identifies edge against closing lines using real-time park factors, wind direction relative to park orientation, and Statcast metrics.
+        </p>
+        <div class="project-metrics">
+          <div class="metric">
+            <span class="metric-val">4</span>
+            <span class="metric-key">Live APIs</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Real-time</span>
+            <span class="metric-key">Weather + odds</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Statcast</span>
+            <span class="metric-key">Data source</span>
+          </div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">REST APIs</span>
+          <span class="tag">Statcast</span>
+          <span class="tag">Sports Analytics</span>
+          <span class="tag">DFS</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">Kalshi Prediction Market Bot</div>
+          <span class="project-badge badge-muted">IN DEVELOPMENT</span>
+        </div>
+        <p class="project-desc">
+          Automated trading system targeting Kalshi short-duration crypto prop markets. Explores latency-based edge on KXBTC15M and similar markets — entering positions when market-implied probabilities lag confirmed momentum from exchange feeds. MAMS-v4 signal integration in roadmap.
+        </p>
+        <div class="project-metrics">
+          <div class="metric">
+            <span class="metric-val">15-min</span>
+            <span class="metric-key">Market window</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Momentum</span>
+            <span class="metric-key">Signal type</span>
+          </div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Kalshi API</span>
+          <span class="tag">Prediction Markets</span>
+          <span class="tag">Automation</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">Ballpark DFS Ranker</div>
+          <span class="project-badge badge-amber">TOOL</span>
+        </div>
+        <p class="project-desc">
+          Research tool combining park factor data with real-time weather and wind direction relative to each stadium's orientation. Outputs ranked park environments for DFS slate building — flags high-upside plays (altitude, wind-out) and fades (suppressed run environments). Coors Field altitude plays and Oracle Park fades built in.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Weather API</span>
+          <span class="tag">Park Factors</span>
+          <span class="tag">DFS Research</span>
+          <span class="tag">MLB</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-label reveal">02 // SKILLS</div>
+    <div class="skills-grid reveal">
+      <div class="skill-block">
+        <div class="skill-category">Languages</div>
+        <div class="skill-list">
+          <span class="tag">Python</span>
+          <span class="tag">Pine Script v6</span>
+          <span class="tag">SQL</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-category">APIs & Data</div>
+        <div class="skill-list">
+          <span class="tag">REST APIs</span>
+          <span class="tag">MLB Stats API</span>
+          <span class="tag">Baseball Savant</span>
+          <span class="tag">The Odds API</span>
+          <span class="tag">Kalshi API</span>
+          <span class="tag">Exchange APIs</span>
+          <span class="tag">OpenWeatherMap</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-category">Domains</div>
+        <div class="skill-list">
+          <span class="tag">Algorithmic Trading</span>
+          <span class="tag">Sports Analytics</span>
+          <span class="tag">Prediction Markets</span>
+          <span class="tag">DFS Research</span>
+          <span class="tag">Financial Modeling</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-category">Tools & Platforms</div>
+        <div class="skill-list">
+          <span class="tag">TradingView</span>
+          <span class="tag">Pandas</span>
+          <span class="tag">Requests</span>
+          <span class="tag">Git / GitHub</span>
+          <span class="tag">Claude Code</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-label reveal">03 // ABOUT</div>
+    <div class="about-grid reveal">
+      <div class="about-block">
+        <h3>BACKGROUND</h3>
+        <p>
+          B.A. Economics + International Research, Colorado State University (May 2026). Early-career builder focused on applying quantitative and data-driven thinking to trading, sports analytics, and automation. I like building things that make decisions.
+        </p>
+      </div>
+      <div class="about-block">
+        <h3>INTERESTS</h3>
+        <ul class="about-list">
+          <li>Algorithmic & swing trading (crypto)</li>
+          <li>Sports prop modeling & DFS</li>
+          <li>Prediction market strategy</li>
+          <li>API integrations & automation</li>
+          <li>Fintech & quant development</li>
+        </ul>
+      </div>
+      <div class="about-block">
+        <h3>CURRENTLY</h3>
+        <ul class="about-list">
+          <li>Paper trading MAMS-v4 swing system</li>
+          <li>Running MLB prop model in-season</li>
+          <li>Building Kalshi automation layer</li>
+          <li>Open to junior quant / data / dev roles</li>
+        </ul>
+      </div>
+      <div class="about-block">
+        <h3>LOCATION</h3>
+        <p>
+          Highlands Ranch, Colorado.<br>
+          Open to remote or Denver-area roles.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label reveal">04 // CONTACT</div>
+    <div class="contact-row reveal">
+      <div class="contact-block">
+        <div class="contact-label">Email</div>
+        <div class="contact-value">your@email.com</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">github.com/yourusername</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">linkedin.com/in/elliotmalsam</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="footer-text">© 2026 Elliot Malsam</span>
+    <span class="footer-text">Built for GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
