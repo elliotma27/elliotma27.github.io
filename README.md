@@ -63,4 +63,4 @@ Based in Highlands Ranch, CO. Open to remote or Denver-area roles.
 
 ---
 
-*Currently paper trading MAMS-v4 · Running MLB model in-season · Building Kalshi automation*
+*Currently trading MAMS-v4 · Running MLB model in-season · Building Kalshi automation*
