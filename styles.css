@@ -163,6 +163,18 @@ nav .container {
   gap: 4rem;
   align-items: center;
 }
+
+/* Dark scrim behind text column so city canvas doesn't wash it out */
+.hero-grid > div:first-child {
+  background: linear-gradient(
+    120deg,
+    rgba(4, 6, 10, 0.60) 0%,
+    rgba(4, 6, 10, 0.38) 65%,
+    transparent 100%
+  );
+  padding: 2rem 2.5rem 2rem 0;
+  border-radius: 4px;
+}
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -271,7 +283,7 @@ nav .container {
   line-height: 1.75;
   max-width: 500px;
   margin-bottom: 2rem;
-  text-shadow: 0 1px 12px rgba(0,0,0,0.9);
+  text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9);
 }
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
