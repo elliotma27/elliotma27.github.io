@@ -12,6 +12,41 @@
 </head>
 <body>
 
+  <canvas id="city-canvas"></canvas>
+
+  <!-- VERTICAL SIGNAGE RAILS -->
+  <div id="left-rail" aria-hidden="true">
+    <div class="vsign vsign--accent">MAMS</div>
+    <div class="vsign vsign--dim">EXEC</div>
+    <div class="vsign vsign--accent vsign--pulse" style="animation-delay:1.2s">LIVE</div>
+    <div class="vsign vsign--noborder vsign--dim">1H</div>
+    <div class="vsign vsign--dim" style="animation-delay:2.8s">ETH</div>
+    <div class="vsign vsign--dim" style="animation-delay:0.6s">ALGO</div>
+    <div class="vsign vsign--accent2 vsign--blink">RISK</div>
+    <div class="vsign vsign--dim" style="animation-delay:4.1s">SYS</div>
+    <div class="vsign vsign--accent" style="animation-delay:3.3s">OK</div>
+  </div>
+
+  <div id="right-rail" aria-hidden="true">
+    <div class="vsign vsign--dim" style="animation-delay:1.7s">DATA</div>
+    <div class="vsign vsign--accent" style="animation-delay:0.4s">QUANT</div>
+    <div class="vsign vsign--accent2 vsign--blink" style="animation-delay:2.1s">SCAN</div>
+    <div class="vsign vsign--dim" style="animation-delay:3.5s">EQDT</div>
+    <div class="vsign vsign--noborder vsign--dim" style="animation-delay:1.0s">v4</div>
+    <div class="vsign vsign--dim" style="animation-delay:4.8s">USD</div>
+    <div class="vsign vsign--dim" style="animation-delay:2.3s">PYTH</div>
+    <div class="vsign vsign--dim" style="animation-delay:0.9s">KALSH</div>
+    <div class="vsign vsign--dim vsign--accent" style="animation-delay:3.9s">DEV</div>
+  </div>
+
+  <!-- MARQUEE BAND -->
+  <div id="marquee-band" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="mq-seg">MAMS-v4 <span class="mq-sep">·</span> ETH/USD 1H <span class="mq-sep">·</span> NET RETURN <span class="mq-hi">+46.43%</span> <span class="mq-sep">·</span> WIN RATE <span class="mq-hi">57.94%</span> <span class="mq-sep">·</span> PROFIT FACTOR <span class="mq-hi">1.641</span> <span class="mq-sep">·</span> DRAWDOWN <span class="mq-neu">−3.27%</span> <span class="mq-gap">◆</span> EQDT-v1 <span class="mq-sep">·</span> INTRADAY EQUITY <span class="mq-sep">·</span> STATUS: <span class="mq-warn">TESTING</span> <span class="mq-sep">·</span> 8 AGENTS ACTIVE <span class="mq-sep">·</span> UNIVERSE 100+ <span class="mq-sep">·</span> R:R TARGET 2:1 <span class="mq-gap">◆</span> KALSHI-v0 <span class="mq-sep">·</span> PRED MARKETS <span class="mq-sep">·</span> INFO LAG DETECTION <span class="mq-sep">·</span> STATUS: <span class="mq-neu">DEV</span> <span class="mq-gap">◆</span> SYS STATUS: <span class="mq-hi">NOMINAL</span> <span class="mq-sep">·</span> ALL FEEDS OK <span class="mq-sep">·</span> 2026-08-27 <span class="mq-gap">◆</span></span>
+      <span class="mq-seg">MAMS-v4 <span class="mq-sep">·</span> ETH/USD 1H <span class="mq-sep">·</span> NET RETURN <span class="mq-hi">+46.43%</span> <span class="mq-sep">·</span> WIN RATE <span class="mq-hi">57.94%</span> <span class="mq-sep">·</span> PROFIT FACTOR <span class="mq-hi">1.641</span> <span class="mq-sep">·</span> DRAWDOWN <span class="mq-neu">−3.27%</span> <span class="mq-gap">◆</span> EQDT-v1 <span class="mq-sep">·</span> INTRADAY EQUITY <span class="mq-sep">·</span> STATUS: <span class="mq-warn">TESTING</span> <span class="mq-sep">·</span> 8 AGENTS ACTIVE <span class="mq-sep">·</span> UNIVERSE 100+ <span class="mq-sep">·</span> R:R TARGET 2:1 <span class="mq-gap">◆</span> KALSHI-v0 <span class="mq-sep">·</span> PRED MARKETS <span class="mq-sep">·</span> INFO LAG DETECTION <span class="mq-sep">·</span> STATUS: <span class="mq-neu">DEV</span> <span class="mq-gap">◆</span> SYS STATUS: <span class="mq-hi">NOMINAL</span> <span class="mq-sep">·</span> ALL FEEDS OK <span class="mq-sep">·</span> 2026-08-27 <span class="mq-gap">◆</span></span>
+    </div>
+  </div>
+
   <!-- NAV -->
   <nav>
     <div class="container">
@@ -459,6 +494,7 @@
     </div>
   </footer>
 
+  <script src="scripts/city.js"></script>
   <script>
     function toggleProj(id) {
       document.getElementById(id).classList.toggle('open');

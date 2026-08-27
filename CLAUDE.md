@@ -30,7 +30,9 @@ Hairline 1px borders over shadows.
 Panels overlap and offset slightly — avoid a clean centered column.
 Asymmetric grid. Vertical rules between sections.
 
-## Motion
-Subtle only. Scanline sweeps, slow opacity fades, staggered reveals.
-No bounce, no parallax, no auto-playing loops.
-Respect prefers-reduced-motion.
+## Motion — maximal
+This site should feel ALIVE. Ambition over restraint.
+Layered depth, constant subtle movement, scroll-reactive everything.
+Still forbidden: purple gradients, glassmorphism, bounce easing,
+anything that hurts readability or breaks on mobile.
+Everything respects prefers-reduced-motion. needs to look like one of these cyberpunk cities

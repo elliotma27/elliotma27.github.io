@@ -31,11 +31,20 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font-body);
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+#city-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  display: block;
 }
 
 a { color: var(--accent); text-decoration: none; }
@@ -116,6 +125,7 @@ nav .container {
 
 /* ===== HERO ===== */
 #hero {
+  background: transparent;
   padding: 136px 0 88px;
   min-height: 100vh;
   display: flex;
@@ -263,7 +273,7 @@ nav .container {
 }
 
 /* ===== SECTIONS ===== */
-section { padding: 80px 0; }
+section { padding: 80px 0; background: rgba(7,9,13,0.82); }
 section + section { border-top: 1px solid var(--line); }
 
 .section-head {
@@ -571,7 +581,7 @@ section + section { border-top: 1px solid var(--line); }
 .contact-arrow { margin-top: 1rem; font-size: 1rem; color: var(--accent); }
 
 /* ===== FOOTER ===== */
-footer { border-top: 1px solid var(--line); padding: 1.5rem 0; }
+footer { background: rgba(7,9,13,0.82); border-top: 1px solid var(--line); padding: 1.5rem 0; margin-bottom: 24px; }
 footer .container { display: flex; justify-content: space-between; align-items: center; }
 .footer-txt {
   font-family: var(--font-mono);
@@ -660,6 +670,123 @@ footer .container { display: flex; justify-content: space-between; align-items: 
   color: var(--text);
 }
 .dmeta-val.accent { color: var(--accent); }
+
+/* ===== VERTICAL RAIL SIGNAGE ===== */
+#left-rail, #right-rail {
+  position: fixed;
+  top: 0;
+  bottom: 24px; /* clear the marquee band */
+  width: 28px;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 0 16px;
+  gap: 4px;
+}
+#left-rail  { left: 8px; }
+#right-rail { right: 8px; }
+
+.vsign {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  writing-mode: vertical-lr;
+  white-space: nowrap;
+  padding: 8px 5px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  opacity: 0.55;
+  animation: sign-breathe 7s ease-in-out infinite;
+}
+.vsign--accent  {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  opacity: 0.72;
+}
+.vsign--accent2 {
+  color: var(--accent-2);
+  border-color: rgba(255,46,136,0.22);
+  opacity: 0.68;
+}
+.vsign--dim {
+  opacity: 0.38;
+}
+.vsign--noborder {
+  border-color: transparent;
+}
+.vsign--pulse {
+  animation: sign-pulse 2.8s ease-in-out infinite;
+}
+.vsign--blink {
+  animation: sign-blink 4.2s step-end infinite;
+}
+
+@keyframes sign-breathe {
+  0%, 100% { opacity: 0.32; }
+  50%       { opacity: 0.68; }
+}
+@keyframes sign-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 0.90; }
+}
+@keyframes sign-blink {
+  0%, 88%, 100% { opacity: 0.70; }
+  90%, 98%      { opacity: 0.10; }
+}
+
+/* hide rails when no margin room */
+@media (max-width: 1100px) {
+  #left-rail, #right-rail { display: none; }
+}
+
+/* ===== MARQUEE BAND ===== */
+#marquee-band {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  background: rgba(7,9,13,0.90);
+  display: flex;
+  align-items: center;
+}
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee-scroll 100s linear infinite;
+}
+.mq-seg {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-right: 64px;
+  opacity: 0.7;
+}
+.mq-sep  { color: var(--line);    margin: 0 8px; }
+.mq-gap  { color: var(--accent);  margin: 0 24px; opacity: 0.5; }
+.mq-hi   { color: var(--accent); }
+.mq-warn { color: #f0b429; }
+.mq-neu  { color: var(--muted); }
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vsign              { animation: none !important; opacity: 0.45; }
+  .marquee-track      { animation: none; }
+}
 
 /* ===== CRT SCANLINE TEXTURE ===== */
 body::before {
