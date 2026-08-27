@@ -258,18 +258,20 @@ nav .container {
   font-family: var(--font-mono);
   font-weight: 400;
   font-size: clamp(0.75rem, 1.5vw, 0.9375rem);
-  color: var(--muted);
+  color: rgba(180, 205, 228, 0.78);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.9);
 }
 .hero-bio {
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  color: var(--muted);
+  color: var(--text);
   line-height: 1.75;
   max-width: 500px;
   margin-bottom: 2rem;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.9);
 }
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
