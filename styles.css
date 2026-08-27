@@ -413,8 +413,6 @@ section + section { border-top: 1px solid var(--line); }
 
 .proj-item {
   border-bottom: 1px solid var(--line);
-  will-change: transform;
-  transform-origin: center center;
   transition: box-shadow 0.3s ease, border-left-color 0.3s ease;
   border-left: 2px solid transparent;
 }
