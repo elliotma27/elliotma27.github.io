@@ -125,7 +125,7 @@ nav .container {
 
 /* ===== HERO ===== */
 #hero {
-  background: transparent;
+  background: rgba(5, 7, 11, 0.42);
   padding: 136px 0 88px;
   min-height: 100vh;
   display: flex;
@@ -164,17 +164,6 @@ nav .container {
   align-items: center;
 }
 
-/* Dark scrim behind text column so city canvas doesn't wash it out */
-.hero-grid > div:first-child {
-  background: linear-gradient(
-    120deg,
-    rgba(4, 6, 10, 0.60) 0%,
-    rgba(4, 6, 10, 0.38) 65%,
-    transparent 100%
-  );
-  padding: 2rem 2.5rem 2rem 0;
-  border-radius: 4px;
-}
 .hero-eyebrow {
   display: flex;
   align-items: center;
