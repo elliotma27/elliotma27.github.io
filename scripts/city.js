@@ -67,6 +67,26 @@
   function randi(lo, hi) { return Math.floor(rand(lo, hi + 1)); }
   function pick(arr)     { return arr[randi(0, arr.length - 1)]; }
 
+  // ── Japanese sign pool ─────────────────────────────────────────────────────
+  var JP_SIGNS = [
+    // Single kanji — landmark feel
+    '光', '夜', '食', '酒', '店', '東', '金', '熱', '風', '水', '火', '南', '楽', '夢',
+    // Katakana words
+    'ホテル', 'バー', 'クラブ', 'カラオケ', 'ラーメン', 'パチンコ', 'ゲーム', 'ナイト',
+    // Short phrase signs
+    '営業中', '深夜', '居酒屋', '焼肉', '食堂', '薬局', '銀行', '両替',
+    // Place names
+    '新宿', '銀座', '渋谷', '東京', '六本木',
+    // Numbers / time
+    '24時間', '深夜営業'
+  ];
+  var JP_COLORS = [
+    'rgba(0,229,255,',   // cyan
+    'rgba(255,46,136,',  // magenta
+    'rgba(255,200,65,',  // amber
+    'rgba(200,255,200,'  // pale green (rare feel)
+  ];
+
   // ── Building generator ─────────────────────────────────────────────────────
   function buildCity(layer) {
     var baseY = layer.baseYFrac * H;
@@ -187,12 +207,34 @@
         };
       }
 
+      // Japanese text sign on facade
+      var textSign = null;
+      var jpChance = isNear ? 0.28 : layer.id === 'mid' ? 0.16 : layer.id === 'far' ? 0.08 : 0;
+      if (jpChance > 0 && h > baseY * 0.20 && Math.random() < jpChance) {
+        var jpTxt   = pick(JP_SIGNS);
+        var jpColor = pick(JP_COLORS);
+        var jpSize  = isNear ? randi(10, 16) : layer.id === 'mid' ? randi(7, 11) : randi(5, 8);
+        textSign = {
+          txt:         jpTxt,
+          color:       jpColor,
+          alpha:       rand(0.55, 0.88),
+          size:        jpSize,
+          relX:        rand(0.05, Math.max(0.06, 1 - (jpSize + 6) / w)),
+          relY:        rand(0.12, 0.52),
+          blink:       Math.random() > 0.75,
+          blinkRate:   randi(35, 110),
+          blinkOffset: randi(0, 400),
+          hasBox:      Math.random() > 0.45
+        };
+      }
+
       buildings.push({
         x: x, w: w, h: h,
         floorH: floorH, numFloors: numFloors,
         wins: wins, bands: bands,
         antenna: antenna, sign: sign,
         edgeStrip: edgeStrip, setback: setback,
+        textSign: textSign,
         wType: wType
       });
 
@@ -399,6 +441,50 @@
           srad.addColorStop(1, sg.color + '0)');
           ctx.fillStyle = srad;
           ctx.fillRect(sx - sg.w * 0.5, sy - sg.h, sg.w * 2, sg.h * 3);
+        }
+      }
+
+      // ── Japanese text sign ───────────────────────────────────────────────
+      if (b.textSign) {
+        var ts    = b.textSign;
+        var talpha = ts.alpha;
+        if (ts.blink && Math.floor((tick + ts.blinkOffset) / ts.blinkRate) % 2 !== 0) talpha = 0;
+
+        if (talpha > 0) {
+          var chars  = ts.txt.split('');
+          var charH  = ts.size + 2;
+          var textH  = chars.length * charH;
+          var tx     = bx + ts.relX * b.w;
+          var ty     = by + ts.relY * b.h;
+
+          // Clamp inside building bounds
+          if (ty + textH > baseY - 4) ty = baseY - textH - 6;
+          if (tx + ts.size > bx + b.w - 1) tx = bx + b.w - ts.size - 2;
+
+          ctx.save();
+
+          // Optional panel box
+          if (ts.hasBox) {
+            ctx.strokeStyle = ts.color + (talpha * 0.65) + ')';
+            ctx.lineWidth   = 0.8;
+            ctx.strokeRect(tx - 2, ty - 2, ts.size + 4, textH + 4);
+            ctx.fillStyle = ts.color + (talpha * 0.07) + ')';
+            ctx.fillRect(tx - 2, ty - 2, ts.size + 4, textH + 4);
+          }
+
+          // Glow + text
+          ctx.shadowBlur  = 6;
+          ctx.shadowColor = ts.color + '0.85)';
+          ctx.fillStyle   = ts.color + talpha + ')';
+          ctx.font        = ts.size + 'px sans-serif';
+          ctx.textBaseline = 'top';
+
+          chars.forEach(function (ch, ci) {
+            ctx.fillText(ch, tx, ty + ci * charH);
+          });
+
+          ctx.shadowBlur = 0;
+          ctx.restore();
         }
       }
 
